@@ -3,6 +3,7 @@
 from struct import pack, unpack;
 import struct;
 import logging;
+from sys import stdout;
 from io import BytesIO;
 import socket
 from typing import Any;
@@ -50,7 +51,7 @@ def main() -> None:
 
     # Prepare logging
     logging.basicConfig(
-        filename = LOG_FILE,
+        stream = stdout,
         level = logging.INFO,
         format = "%(asctime)s - %(message)s",
         datefmt = "%Y-%m-%d %H:%M:%S"
