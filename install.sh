@@ -17,13 +17,21 @@ then
     install_user=$USER
 fi
 
+# Check user isn't root
+
+if [ "$install_user" = "root" ]
+then
+    echo "ERROR: Won't set up service to run as root"
+    exit 1
+fi
+
 # Check user exists
 
 id -u "$install_user" > /dev/null
 
 if (( $? == 1 ))
 then
-    echo "User $install_user doesn't exist"
+    echo "ERROR: User $install_user doesn't exist"
     exit 1
 fi
 
