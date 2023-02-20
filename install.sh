@@ -1,6 +1,7 @@
 # Bash script to install the netwhereis daemon on the system and set it to run on startup using systemd
 
-SCRIPT_FILENAME="netwhereisd.py"
+SCRIPTS_FILENAMES="netwhereisd.py config.py network.py"
+SCRIPT_INSTALL_DIR="/usr/bin/netwhereisd"
 SERVICE_FILENAME="netwhereisd.service"
 SERVICE_PATH="/etc/systemd/system/$SERVICE_FILENAME"
 
@@ -26,11 +27,16 @@ then
     exit 1
 fi
 
-# Copy daemon script to run location
+# Copy daemon scripts to run location
 
-echo "Copying script into /usr/bin..."
+echo "Copying scripts into $SCRIPT_INSTALL_DIR..."
 
-sudo cp "$SCRIPT_FILENAME" "/usr/bin"
+sudo mkdir "$SCRIPT_INSTALL_DIR"
+
+for script in $SCRIPTS_FILENAMES
+do
+    sudo cp "$script" "$SCRIPT_INSTALL_DIR"
+done
 
 # Write service file in systemd directory
 
@@ -44,7 +50,7 @@ StartLimitIntervalSec=10
 
 [Service]
 User=$install_user
-WorkingDirectory=/usr/bin
+WorkingDirectory=$SCRIPT_INSTALL_DIR
 ExecStart=/usr/bin/env python3 netwhereisd.py
 Restart=always
 RestartSec=1
